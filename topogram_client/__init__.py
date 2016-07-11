@@ -126,6 +126,8 @@ class TopogramAPIClient(object):
             "x" : x,
             "y" : y
         }
+        for k in data :
+            el[k] = data[k]
         return self.make_request("POST", "nodes", { "element" : el, "data" : data })
 
     def get_node(self, _id):
@@ -139,3 +141,25 @@ class TopogramAPIClient(object):
     def delete_node(self, _id):
         """DELETE a node. Returns an empty node"""
         return self.make_request("DELETE", "nodes/"+_id, {})
+
+    def create_edge(self, topogramId, source, target, name=None, data={}):
+        """POST Create a single edge. Returns the created edge."""
+        assert type(data) is dict
+        assert type(source) is str
+        assert type(source) is str
+        if name : assert type(name) is str
+        print name
+        el = {
+            "id" : name,
+            "source" : source,
+            "target" : target
+        }
+        for k in data :
+            el[k] = data[k]
+        return self.make_request("POST", "edges", { "element" : el, "data" : data })
+
+    def update_edge(self, _id, source=None, target=None, name=None, data={}):
+        """PUT update a single edge. Returns the updated edge"""
+        return self.make_request("PUT", "nodes/"+_id, { "id" : name, "source" : source, "target" : target, "data" : data })
+
+    

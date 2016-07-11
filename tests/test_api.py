@@ -110,10 +110,11 @@ class TestTopogramAPIClient(unittest.TestCase):
     def test_create_node(self):
         r = self.client.create_topogram("ok")
         topogramId = r["data"]["_id"]
-        r = self.client.create_node(topogramId, id="jojo", x=1, y=2)
+        r = self.client.create_node(topogramId, id="jojo", x=1, y=2, data={"lat" : 3})
         self.assertEqual(r["data"]["data"]["id"], "jojo")
         self.assertEqual(r["data"]["position"]["x"], 1)
         self.assertEqual(r["data"]["position"]["y"], 2)
+        self.assertEqual(r["data"]["data"]["lat"], 3)
 
     def test_get_node(self):
         topogramId = "sth"
@@ -144,18 +145,37 @@ class TestTopogramAPIClient(unittest.TestCase):
         self.assertEqual(r["status"], "fail")
         self.assertIn("not found", r["message"])
 
+    def test_create_edge(self):
+        topogramId = "sth"
+        r = self.client.create_edge(topogramId, "bla", "bli", data={"lat" : 2}, name = "kokoko")
+        # _id = r["data"]["_id"]
+        self.assertEqual(r["data"]["data"]["source"], "bla")
+        self.assertEqual(r["data"]["data"]["target"], "bli")
+        self.assertEqual(r["data"]["data"]["lat"], 2)
+        self.assertEqual(r["data"]["id"], "kokoko")
+
+    def test_update_edge(self):
+        topogramId = "sth"
+        r = self.client.create_edge(topogramId, "bla", "bli", data={"lat" : 2}, name = "kokoko")
+        _id = r["data"]["_id"]
+        self.assertEqual(r["data"]["data"]["source"], "bla")
+        self.assertEqual(r["data"]["data"]["target"], "bli")
+        self.assertEqual(r["data"]["data"]["lat"], 2)
+        self.assertEqual(r["data"]["id"], "kokoko")
+
+        r = self.client.create_edge(_id, source="blu", target="blo", data={"lat" : 3}, name = "kikiki")
+        self.assertEqual(r["data"]["data"]["source"], "blu")
+        self.assertEqual(r["data"]["data"]["target"], "blo")
+        self.assertEqual(r["data"]["data"]["lat"], 3)
+        self.assertEqual(r["data"]["id"], "kikiki")
+
     # def test_create_a_bunch_of_nodes(self):
     #     self.assertEqual(True, False)
     #
     # def test_update_a_bunch_of_nodes(self):
     #     self.assertEqual(True, False)
     #
-    # def test_create_a_single_edge(self):
-    #     self.assertEqual(True, False)
-    #
-    # def test_update_a_single_edge(self):
-    #     self.assertEqual(True, False)
-    #
+
     # def test_create_a_bunch_of_edges(self):
     #     self.assertEqual(True, False)
     #
