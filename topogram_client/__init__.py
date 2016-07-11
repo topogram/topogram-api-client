@@ -59,7 +59,7 @@ class TopogramAPIClient(object):
 
     def parse_res(self, r):
         data = r.json()
-        data["status_code"] = r.status_code
+        if type(data) is not list : data["status_code"] = r.status_code
         return data
 
     def check_active_connection(self):
@@ -80,12 +80,34 @@ class TopogramAPIClient(object):
         return self.make_request("DELETE", "users/"+_id, {})
 
     def create_topogram(self, name):
-        """Create a topogram based on a name""" 
-        return self.make_request("POST", "topograms", { "name" : "haha" })
+        """Create a topogram based on a name or a dict"""
+        assert type(name) == str
+        return self.make_request("POST", "topograms", { "name" : name })
 
-    def get_public_topograms_list(self):
+    def makePublic(self, _id):
+        """Make a topogram public based on its id"""
+        return self.make_request("POST", "topograms/" + _id + "/public", {})
+
+    def makePublic(self, _id):
+        """Make a topogram public based on its id"""
+        return self.make_request("POST", "topograms/" + _id + "/public", {})
+
+    def makePrivate(self, _id):
+        """Make a topogram public based on its id"""
+        return self.make_request("POST", "topograms/" + _id + "/private", {})
+
+    def get_public_topograms(self):
         """GET all public topograms. Returns a list of topograms"""
-        r = self.make_request("GET", "publicTopograms", {})
-        assert r.status_code == 200
-        log.debug("Getting all public topograms : %s results", len(r.json()))
-        return r.json()
+        return self.make_request("GET", "publicTopograms", {})
+
+    def get_topograms(self):
+        """GET private topograms from the logged-in user. Returns a list of topograms"""
+        return self.make_request("GET", "topograms", {})
+
+    def get_topogram(self, _id):
+        """GET a single topogram with its _id. Returns a topogram"""
+        return self.make_request("GET", "topograms/"+_id, {})
+
+    def delete_topogram(self, _id):
+        """DELETE  public topograms. Returns a list of topograms"""
+        return self.make_request("DELETE", "topograms/"+_id, {})

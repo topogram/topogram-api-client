@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import sys
 import unittest
 import json
@@ -7,10 +10,11 @@ from topogram_client import TopogramAPIClient, set_debugging
 
 # clear DB on start
 from pymongo import MongoClient
-c = MongoClient('localhost', 27017) #Connect to mongodb
-c.drop_database('test_topogram')
 
-#
+def drop_database():
+    c = MongoClient('localhost', 27017) #Connect to mongodb
+    c.drop_database('test_topogram')
+
 test_server_url = "http://localhost:3030"
 
 # hack to support python 3
@@ -26,13 +30,17 @@ class TestTopogramAPIClient(unittest.TestCase):
         self.client = TopogramAPIClient(test_server_url, debug=True)
         self.session = session()
 
+    def setUp(self):
+
+        # clean the database
+        drop_database()
+
         # create a new user
         self.client.create_user("tester@tester.com", "password")
 
         # log in
         r = self.client.user_login("tester@tester.com", "password")
         print r["data"]["authToken"], r["data"]["userId"]
-
 
     def test_make_url(self):
         """URLs should be conformed, errors should be raised when passing wrong paths """
@@ -57,19 +65,48 @@ class TestTopogramAPIClient(unittest.TestCase):
         self.assertRaises(ValueError, lambda : self.client.delete_user(_id) )
 
     def test_create_topogram(self):
+        # create with only a name
         r = self.client.create_topogram("test topogram")
         self.assertEqual(r["status"], "success")
-        self.assertEqual(r["status_code"], 201)
-        self.assertEqual(r["data"]["name"], "haha")
+        self.assertTrue( r["status_code"] == 200 )
+        self.assertEqual(r["data"]["name"], "test topogram")
+
+    def test_make_public(self):
+        r = self.client.create_topogram("test topogram")
+        _id = r["data"]["_id"]
+        r = self.client.makePublic(_id)
+        self.assertEqual(r["data"]["sharedPublic"], 1)
+        r = self.client.makePrivate(_id)
+        self.assertEqual(r["data"]["sharedPublic"], 0)
 
     def test_get_public_topograms_list(self):
-        self.client.get_public_topograms_list()
-        self.assertEqual(True, False)
+        r = self.client.create_topogram("test topogram")
+        _id = r["data"]["_id"]
+        r = self.client.makePublic(_id)
+        r = self.client.get_public_topograms()
+        self.assertEqual(len(r), 1)
 
-    #
-    # def test_delete_network(self):
-    #     self.assertEqual(True, False)
-    #
+    def test_get_private_topograms_list(self):
+        self.client.create_topogram("wonderful isn't it?")
+        self.client.create_topogram("yes, absolutely stunning")
+        self.client.create_topogram("well, not so bad")
+        r = self.client.get_topograms()
+        self.assertEqual(len(r["data"]), 3)
+
+    def test_get_topogram(self):
+        r = self.client.create_topogram("哈哈哈")
+        _id = r["data"]["_id"]
+        r = self.client.get_topogram(_id)
+        self.assertEqual(r["data"]["name"].encode('utf-8'), "哈哈哈")
+
+    def test_delete_topogram(self):
+        r = self.client.create_topogram("to be deleted")
+        _id = r["data"]["_id"]
+        r = self.client.delete_topogram(_id)
+        # TODO : assert that nodes and edges have correctly disappear
+        r = self.client.get_topograms()
+        self.assertEqual(len(r["data"]), 0)
+
     # def test_create_single_node(self):
     #     self.assertEqual(True, False)
     #
