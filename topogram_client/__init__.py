@@ -33,7 +33,7 @@ class TopogramAPIClient(object):
         return self.base_url+"/api/"+path
 
     def make_request(self, method, path, data):
-        assert method in ["POST", "GET", "DELETE"]
+        assert method in ["POST", "GET", "PUT", "DELETE"]
         assert type(data) is dict
 
         # make API url
@@ -46,6 +46,8 @@ class TopogramAPIClient(object):
             r = self.session.delete(req_url, json=data)
         elif method == "GET":
             r = self.session.get(req_url, json=data)
+        elif method == "PUT":
+            r = self.session.put(req_url, json=data)
         else :
             raise ValueError("Unknown method : %s"%method)
 
@@ -109,5 +111,31 @@ class TopogramAPIClient(object):
         return self.make_request("GET", "topograms/"+_id, {})
 
     def delete_topogram(self, _id):
-        """DELETE  public topograms. Returns a list of topograms"""
+        """DELETE a topogram from its _id. Returns an empty topograms"""
         return self.make_request("DELETE", "topograms/"+_id, {})
+
+    def create_node(self, topogramId, id=None, x=None, y=None, data={}):
+        """POST Create a single node. Returns the created node."""
+        assert type(data) is dict
+        if id : assert type(id) is str
+        if x : assert type(x) is float or type(x) is int
+        if y : assert type(y) is float or type(x) is int
+
+        el = {
+            "id" : id,
+            "x" : x,
+            "y" : y
+        }
+        return self.make_request("POST", "nodes", { "element" : el, "data" : data })
+
+    def get_node(self, _id):
+        """GET a single node. Returns a node"""
+        return self.make_request("GET", "nodes/"+_id, {})
+
+    def update_node(self, _id, id=None, x=None, y=None, data={}):
+        """PUT update a single node. Returns the updated node"""
+        return self.make_request("PUT", "nodes/"+_id, { "id" : id, "x" : x, "y" : y, "data" : data })
+
+    def delete_node(self, _id):
+        """DELETE a node. Returns an empty node"""
+        return self.make_request("DELETE", "nodes/"+_id, {})

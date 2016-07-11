@@ -107,12 +107,43 @@ class TestTopogramAPIClient(unittest.TestCase):
         r = self.client.get_topograms()
         self.assertEqual(len(r["data"]), 0)
 
-    # def test_create_single_node(self):
-    #     self.assertEqual(True, False)
-    #
-    # def test_update_node(self):
-    #     self.assertEqual(True, False)
-    #
+    def test_create_node(self):
+        r = self.client.create_topogram("ok")
+        topogramId = r["data"]["_id"]
+        r = self.client.create_node(topogramId, id="jojo", x=1, y=2)
+        self.assertEqual(r["data"]["data"]["id"], "jojo")
+        self.assertEqual(r["data"]["position"]["x"], 1)
+        self.assertEqual(r["data"]["position"]["y"], 2)
+
+    def test_get_node(self):
+        topogramId = "sth"
+        r = self.client.create_node(topogramId, id="jojo", x=1, y=2)
+        _id = r["data"]["_id"]
+        r = self.client.get_node(_id)
+        self.assertEqual(r["data"]["data"]["id"], "jojo")
+        self.assertEqual(r["data"]["position"]["x"], 1)
+        self.assertEqual(r["data"]["position"]["y"], 2)
+
+    def test_update_node(self):
+        topogramId = "sth"
+        r = self.client.create_node(topogramId, id="jojo", x=1, y=2)
+        _id = r["data"]["_id"]
+        self.assertEqual(r["data"]["position"]["x"], 1)
+        self.assertEqual(r["data"]["position"]["y"], 2)
+        r = self.client.update_node(_id, x=3, y=4, data={"starred" : True})
+        self.assertEqual(r["data"]["position"]["x"], 3)
+        self.assertEqual(r["data"]["position"]["y"], 4)
+        self.assertEqual(r["data"]["data"]["starred"], True)
+
+    def test_delete_node(self):
+        topogramId = "sth"
+        r = self.client.create_node(topogramId, id="jojo", x=1, y=2)
+        _id = r["data"]["_id"]
+        r = self.client.delete_node(_id)
+        r = self.client.get_node(_id)
+        self.assertEqual(r["status"], "fail")
+        self.assertIn("not found", r["message"])
+
     # def test_create_a_bunch_of_nodes(self):
     #     self.assertEqual(True, False)
     #
