@@ -62,10 +62,9 @@ class TestTopogramAPIClient(unittest.TestCase):
         self.assertEqual(r["status_code"], 201)
         self.assertEqual(r["data"]["name"], "haha")
 
-    #
-    # def test_get_public_network_list(self):
-    #     self.client.get_public_topograms_list()
-    #     self.assertEqual(True, False)
+    def test_get_public_topograms_list(self):
+        self.client.get_public_topograms_list()
+        self.assertEqual(True, False)
 
     #
     # def test_delete_network(self):
