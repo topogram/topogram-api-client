@@ -27,7 +27,7 @@ setup(
     packages = find_packages(exclude=['res', 'scripts', 'tests*']),
     install_requires=required,
     entry_points = {
-                'console_scripts': [ 'topogram-client=bin.import_to_Topogram:main' ]
+                'console_scripts': [ 'topogram-client=bin:main' ]
                 },
     license='BSD',
     zip_safe=False,

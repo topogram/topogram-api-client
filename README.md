@@ -11,6 +11,10 @@ A python lib to communicate with Topogram
     # create a new network
     topogram.create_network("test")
 
+## command-line
+
+    topogram-client
+
 ## tests
 
     nosetests --rednose tests

@@ -15,8 +15,7 @@ def parse_CSV_data(filename):
     print "Data: %s rows to export"%len(data)
     return data
 
-if __name__ == '__main__':
-
+def main() :
     parser = argparse.ArgumentParser(description='import CSV data into Topogram')
     parser.add_argument('filename', action="store", default=None, help='CSV file path' )
     parser.add_argument('--base-url', default='http://localhost:3000', help='Base URL for Topogram API endpoint')
@@ -37,4 +36,5 @@ if __name__ == '__main__':
     # parse data
     data = parse_data(args.filename)
 
-    
+if __name__ == '__main__':
+    main()
