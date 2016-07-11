@@ -9,4 +9,8 @@ A python lib to communicate with Topogram
     topogram = TopogramAPIClient("http://localhost:3000")
 
     # create a new network
-    topogram.create_network("test") 
+    topogram.create_network("test")
+
+## tests
+
+    nosetests --rednose tests
