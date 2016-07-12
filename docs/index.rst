@@ -15,7 +15,7 @@ Welcome to Topogram API Client's documentation!
 
 ::
 
-    from topogram-python-client import RhiziAPIClient
+    from topogram_client import TopogramAPIClient
 
     topogram = TopogramAPIClient("http://localhost:3000")
 
@@ -30,7 +30,7 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
-   
+
    install
    api
 
