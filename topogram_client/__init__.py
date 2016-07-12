@@ -198,10 +198,10 @@ class TopogramAPIClient(object):
         """PUT update a single edge. Returns the updated edge"""
         return self.make_request("PUT", "nodes/"+_id, { "id" : name, "source" : source, "target" : target, "data" : data })
 
-    def get_topogram_edges(self, topogramId):
+    def get_edges(self, topogramId):
         """GET all edges from a topogram. Returns a list of edges"""
         return self.make_request("GET", "topograms/"+topogramId+"/edges", {})
 
-    def get_topogram_nodes(self, topogramId):
+    def get_nodes(self, topogramId):
         """GET all nodes from a topogram. Returns a list of node"""
         return self.make_request("GET", "topograms/"+topogramId+"/nodes", {})
