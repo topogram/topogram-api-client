@@ -169,15 +169,37 @@ class TestTopogramAPIClient(unittest.TestCase):
         self.assertEqual(r["data"]["data"]["lat"], 3)
         self.assertEqual(r["data"]["id"], "kikiki")
 
-    # def test_create_a_bunch_of_nodes(self):
-    #     self.assertEqual(True, False)
+    def test_create_nodes(self):
+        topogramId = "sth"
+        nodes = [
+            { "x" : 1, "y" : 2, "id" : "love" },
+            { "x" : 3, "y" : 4, "id" : "hate" },
+            { "x" : 5, "y" : 6, "id" : "indifference" }
+            ]
+
+        r = self.client.create_nodes(topogramId, nodes)
+        self.assertEqual(len(r["data"]), 3)
+        self.assertEqual(set([ d["data"]["id"] for d in r["data"] ]), set(["love", "hate", "indifference"]))
+        self.assertEqual(set([ d["position"]["x"] for d in r["data"] ]), set([1, 3, 5]))
+        self.assertEqual(set([ d["position"]["y"] for d in r["data"] ]), set([2, 4, 6]))
+
+    def test_create_edges(self):
+        topogramId = "sth"
+        edges = [
+            { "source" : 1, "target" : 2, "id" : "love" },
+            { "source" : 3, "target" : 4, "id" : "hate" },
+            { "source" : 5, "target" : 6, "id" : "indifference" }
+            ]
+
+        r = self.client.create_edges(topogramId, edges)
+        self.assertEqual(len(r["data"]), 3)
+        self.assertEqual(set([ d["id"] for d in r["data"] ]), set(["love", "hate", "indifference"]))
+        self.assertEqual(set([ d["data"]["source"] for d in r["data"] ]), set([1, 3, 5]))
+        self.assertEqual(set([ d["data"]["target"] for d in r["data"] ]), set([2, 4, 6]))
     #
     # def test_update_a_bunch_of_nodes(self):
     #     self.assertEqual(True, False)
     #
 
-    # def test_create_a_bunch_of_edges(self):
-    #     self.assertEqual(True, False)
-    #
     # def test_update_a_bunch_of_edges(self):
     #     self.assertEqual(True, False)

@@ -128,7 +128,25 @@ class TopogramAPIClient(object):
         }
         for k in data :
             el[k] = data[k]
-        return self.make_request("POST", "nodes", { "element" : el, "data" : data })
+
+        node = { "element" : el, "data" : data }
+        return self.make_request("POST", "nodes", { "topogramId" : topogramId, "nodes" : [ node ]})
+
+    def create_nodes(self, topogramId, _nodes):
+        """POST Create a bunch of nodes. Returns the created nodes"""
+        assert type(_nodes) is list
+        nodes = []
+        for n in _nodes:
+            el = {}
+            data = {}
+            for k in n:
+                if k in ["id", "x", "y"]:
+                    el[k] = n[k]
+                else:
+                    data[k] = n[k]
+            node = { "element" : el, "data" : data }
+            nodes.append(node)
+        return self.make_request("POST", "nodes", { "topogramId" : topogramId, "nodes" : nodes})
 
     def get_node(self, _id):
         """GET a single node. Returns a node"""
@@ -156,10 +174,26 @@ class TopogramAPIClient(object):
         }
         for k in data :
             el[k] = data[k]
-        return self.make_request("POST", "edges", { "element" : el, "data" : data })
+        edge = { "element" : el, "data" : data }
+        return self.make_request("POST", "edges", { "topogramId" : topogramId, "edges" : [ edge ] })
+
+    def create_edges(self, topogramId, _edges):
+        """POST Create a bunch of edges. Returns the created edges"""
+        assert type(_edges) is list
+        edges = []
+        for n in _edges:
+            el = {}
+            data = {}
+            for k in n:
+                if k in ["id", "source", "target"]:
+                    el[k] = n[k]
+                else:
+                    data[k] = n[k]
+            edge = { "element" : el, "data" : data }
+            edges.append(edge)
+        return self.make_request("POST", "edges", { "topogramId" : topogramId, "edges" : edges})
+
 
     def update_edge(self, _id, source=None, target=None, name=None, data={}):
         """PUT update a single edge. Returns the updated edge"""
         return self.make_request("PUT", "nodes/"+_id, { "id" : name, "source" : source, "target" : target, "data" : data })
-
-    
