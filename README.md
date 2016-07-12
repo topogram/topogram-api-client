@@ -1,8 +1,14 @@
 # Topogram Python API Client
 
+![Read The Docs Build](https://readthedocs.org/projects/topogram/badge/?version=latest)
+
 A python lib to communicate with Topogram
 
+
+
 ## How it works
+
+Read the docs at [http://topogram.readthedocs.io/](http://topogram.readthedocs.io/)
 
     from topogram-python-client import RhiziAPIClient
 
