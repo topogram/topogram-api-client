@@ -20,10 +20,13 @@ Welcome to Topogram API Client's documentation!
     topogram = TopogramAPIClient("http://localhost:3000")
 
     # login as a user
-    topogram.login("test@test.com", "password")
+    topogram.user_login("test@test.com", "password")
 
     # create a new network
-    topogram.create_topogram("test")
+    r = topogram.create_topogram("test")
+
+    topogram_id = r["data"]["id"]
+    topogram.create_node(topogram_id, id="my awesome node", x=103, y=502, data={"lat" : 3.12, "lng": 5.27})
 
 
 Contents:
