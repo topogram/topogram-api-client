@@ -1,6 +1,8 @@
 venv
 *.oldies.py
 
+docs/_build
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
