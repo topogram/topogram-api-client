@@ -172,9 +172,9 @@ class TestTopogramAPIClient(unittest.TestCase):
     def test_create_nodes(self):
         topogramId = "sth"
         nodes = [
-            { "x" : 1, "y" : 2, "id" : "love" },
-            { "x" : 3, "y" : 4, "id" : "hate" },
-            { "x" : 5, "y" : 6, "id" : "indifference" }
+            { "x" : 1, "y" : 2, "id" : "love", "name" : "hihi" },
+            { "x" : 3, "y" : 4, "id" : "hate", "name" : "hoho" },
+            { "x" : 5, "y" : 6, "id" : "indifference", "name" : "haha" }
             ]
 
         r = self.client.create_nodes(topogramId, nodes)
@@ -182,13 +182,14 @@ class TestTopogramAPIClient(unittest.TestCase):
         self.assertEqual(set([ d["data"]["id"] for d in r["data"] ]), set(["love", "hate", "indifference"]))
         self.assertEqual(set([ d["position"]["x"] for d in r["data"] ]), set([1, 3, 5]))
         self.assertEqual(set([ d["position"]["y"] for d in r["data"] ]), set([2, 4, 6]))
+        self.assertEqual(set([ d["data"]["name"] for d in r["data"] ]), set(["hihi", "haha", "hoho"]))
 
     def test_create_edges(self):
         topogramId = "sth"
         edges = [
-            { "source" : 1, "target" : 2, "id" : "love" },
-            { "source" : 3, "target" : 4, "id" : "hate" },
-            { "source" : 5, "target" : 6, "id" : "indifference" }
+            { "source" : 1, "target" : 2, "id" : "love", "name" : "hihi" },
+            { "source" : 3, "target" : 4, "id" : "hate", "name" : "haha" },
+                { "source" : 5, "target" : 6, "id" : "indifference", "name" : "hoho" }
             ]
 
         r = self.client.create_edges(topogramId, edges)
@@ -196,6 +197,7 @@ class TestTopogramAPIClient(unittest.TestCase):
         self.assertEqual(set([ d["id"] for d in r["data"] ]), set(["love", "hate", "indifference"]))
         self.assertEqual(set([ d["data"]["source"] for d in r["data"] ]), set([1, 3, 5]))
         self.assertEqual(set([ d["data"]["target"] for d in r["data"] ]), set([2, 4, 6]))
+        self.assertEqual(set([ d["data"]["name"] for d in r["data"] ]), set(["hihi", "haha", "hoho"]))
 
     def test_get_edges(self):
         topogramId = "sth"

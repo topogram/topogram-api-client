@@ -140,10 +140,7 @@ class TopogramAPIClient(object):
             el = {}
             data = {}
             for k in n:
-                if k in ["id", "x", "y"]:
-                    el[k] = n[k]
-                else:
-                    data[k] = n[k]
+                el[k] = n[k]
             node = { "element" : el, "data" : data }
             nodes.append(node)
         return self.make_request("POST", "nodes", { "topogramId" : topogramId, "nodes" : nodes})
@@ -189,10 +186,7 @@ class TopogramAPIClient(object):
             el = {}
             data = {}
             for k in n:
-                if k in ["id", "source", "target"]:
-                    el[k] = n[k]
-                else:
-                    data[k] = n[k]
+                el[k] = n[k]
             edge = { "element" : el, "data" : data }
             edges.append(edge)
         return self.make_request("POST", "edges", { "topogramId" : topogramId, "edges" : edges})
