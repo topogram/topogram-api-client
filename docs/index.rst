@@ -27,7 +27,8 @@ Welcome to Topogram API Client's documentation!
 
     topogram_id = r["data"]["id"]
     topogram.create_node(topogram_id, id="my awesome node", x=103, y=502, data={"lat" : 3.12, "lng": 5.27})
-
+    topogram.create_node(topogram_id, id="my other awesome node")
+    topogram.create_edge(topogram_id, "my awesome node", "my other awesome node", name="my great edge")
 
 Contents:
 
