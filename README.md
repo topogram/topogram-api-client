@@ -10,7 +10,7 @@ A python lib to communicate with Topogram
 
 Read the docs at [http://topogram.readthedocs.io/](http://topogram.readthedocs.io/)
 
-    from topogram-python-client import RhiziAPIClient
+    from topogram-python-client import TopogramAPIClient
 
     topogram = TopogramAPIClient("http://localhost:3000")
 
