@@ -132,17 +132,9 @@ class TopogramAPIClient(object):
         node = { "element" : el, "data" : data }
         return self.make_request("POST", "nodes", { "topogramId" : topogramId, "nodes" : [ node ]})
 
-    def create_nodes(self, topogramId, _nodes):
+    def create_nodes(self, topogramId, nodes):
         """POST Create a bunch of nodes. Returns the created nodes"""
-        assert type(_nodes) is list
-        nodes = []
-        for n in _nodes:
-            el = {}
-            data = {}
-            for k in n:
-                el[k] = n[k]
-            node = { "element" : el, "data" : data }
-            nodes.append(node)
+        assert type(nodes) is list
         return self.make_request("POST", "nodes", { "topogramId" : topogramId, "nodes" : nodes})
 
     def get_node(self, _id):
@@ -178,23 +170,20 @@ class TopogramAPIClient(object):
         edge = { "element" : el, "data" : data }
         return self.make_request("POST", "edges", { "topogramId" : topogramId, "edges" : [ edge ] })
 
-    def create_edges(self, topogramId, _edges):
+    def create_edges(self, topogramId, edges):
         """POST Create a bunch of edges. Returns the created edges"""
-        assert type(_edges) is list
-        edges = []
-        for n in _edges:
-            el = {}
-            data = {}
-            for k in n:
-                el[k] = n[k]
-            edge = { "element" : el, "data" : data }
-            edges.append(edge)
+        assert type(edges) is list
         return self.make_request("POST", "edges", { "topogramId" : topogramId, "edges" : edges})
 
 
     def update_edge(self, _id, source=None, target=None, name=None, data={}):
         """PUT update a single edge. Returns the updated edge"""
         return self.make_request("PUT", "nodes/"+_id, { "id" : name, "source" : source, "target" : target, "data" : data })
+
+    def update_edge_by_source_target(self, _source, _target, source=None, target=None, name=None, data={}):
+        """PUT update a single edge. Returns the updated edge"""
+        return self.make_request("PUT", "edges?source=%s&target=%s"%(_source,_target), { "id" : name, "source" : source, "target" : target, "data" : data })
+
 
     def delete_edges(self, _ids):
         """DELETE a bunch of edges. Returns empty edges"""
