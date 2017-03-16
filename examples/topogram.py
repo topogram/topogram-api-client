@@ -20,7 +20,7 @@ my_nodes = [{
         "id": str(i),
         "name" : "Node %s"%i
     }
-}for i in range(0,NODES_COUNT)]
+}for i in range(0,NODES_COUNT+1)]
 
 for n in range(0,EDGES_COUNT):
     src = str(randint(0,NODES_COUNT))
