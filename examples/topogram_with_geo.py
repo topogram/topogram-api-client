@@ -3,6 +3,7 @@
 
 from topogram_client import TopogramAPIClient
 from random import randint
+from csv import DictReader
 
 # credentials
 TOPOGRAM_URL = "http://localhost:3000" # "https://app.topogram.io"
@@ -11,32 +12,34 @@ PASSWORD = "password"
 
 
 # data
-NODES_COUNT = 5
-EDGES_COUNT = 8
+my_nodes = []
 my_edges = []
 
-my_nodes = [{
-    "data" : {
-        "id": str(i),
-        "name" : "Node %s"%i
-    }
-}for i in range(0,NODES_COUNT+1)]
+with open('data/test_data_nodes.csv') as f :
+    reader = DictReader(f)
+    for n in reader :
+        node = {
+            "id" : n["id"],
+            "name" : n["name"],
+            "lat" : float(n["lat"]),
+            "lng" : float(n["lng"]),
+            "weight" : float(n["weight"])
+            }
+        my_nodes.append({ "data" : node })
 
-for n in range(0,EDGES_COUNT):
-    src = str(randint(0,NODES_COUNT))
-    tgt = str(randint(0,NODES_COUNT))
-    edge = {
-        "data" : {
-            "source" : src,
-            "target" : tgt,
-            "weight" : 5,
-            "name" : "Edge from %s to %s"%(src, tgt)
+print my_nodes
+
+with open('data/test_data_edges.csv') as f :
+    reader = DictReader(f)
+    for e in reader :
+        edge = {
+            "source" : e["source"],
+            "target" : e["target"],
+            "weight" : float(e["weight"])
         }
-    }
-    my_edges.append(edge)
+        my_edges.append({ "data" : edge })
 
 print my_edges
-print my_nodes
 
 # connect to the topogram instance
 topogram = TopogramAPIClient(TOPOGRAM_URL)
@@ -52,14 +55,14 @@ def create_topogram(title, nodes, edges):
     print "Creating topogram '%s'"%title
 
     r = topogram.create_topogram(title)
-    print r
     print r["data"]
     topogram_ID = r["data"]["_id"]
+
+    print "topogram ID : %s"%topogram_ID
 
     # get and backup existing nodes and edges
     existing_nodes = topogram.get_nodes(topogram_ID)["data"]
     existing_edges = topogram.get_edges(topogram_ID)["data"]
-
 
     # clear existing graph
     if len(existing_nodes):
@@ -77,4 +80,4 @@ def create_topogram(title, nodes, edges):
     print "done. Topogram has been updated. Check it at %s/topograms/%s/view"%(TOPOGRAM_URL, topogram_ID)
 
 
-create_topogram("Test", my_nodes, my_edges)
+create_topogram("Test with geo info", my_nodes, my_edges)
