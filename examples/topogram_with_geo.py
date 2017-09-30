@@ -10,7 +10,6 @@ TOPOGRAM_URL = "http://localhost:3000" # "https://app.topogram.io"
 USER = "myself@email.com"
 PASSWORD = "password"
 
-
 # data
 my_nodes = []
 my_edges = []
@@ -39,25 +38,19 @@ with open('data/test_data_edges.csv') as f :
         }
         my_edges.append({ "data" : edge })
 
-print my_edges
-
-# connect to the topogram instance
-topogram = TopogramAPIClient(TOPOGRAM_URL)
-
-# create a new user
-# topogram.create_user(USER, PASSWORD)
-
-# login a new user if needed
-# topogram.user_login(USER, PASSWORD)
+# print my_edges
 
 def create_topogram(title, nodes, edges):
 
     print "Creating topogram '%s'"%title
 
-    r = topogram.create_topogram(title)
-    print r["data"]
-    topogram_ID = r["data"]["_id"]
+    try :
+        r = topogram.create_topogram(title)
+    except ValueError:
+        print '> Topogram already exists'
+        r = topogram.get_topogram_by_name(title)
 
+    topogram_ID = r["data"]["_id"]
     print "topogram ID : %s"%topogram_ID
 
     # get and backup existing nodes and edges
@@ -73,11 +66,27 @@ def create_topogram(title, nodes, edges):
         print "%s edges deleted"%len(existing_edges)
 
     r = topogram.create_nodes(topogram_ID, nodes)
+    print r
     print "%s nodes created."%len(r["data"])
     r = topogram.create_edges(topogram_ID, edges)
     print "%s edges created."%len(r["data"])
 
-    print "done. Topogram has been updated. Check it at %s/topograms/%s/view"%(TOPOGRAM_URL, topogram_ID)
+    print "done. Topogram has been updated. Check it at %s/topograms/%s"%(TOPOGRAM_URL, topogram_ID)
 
+# connect to the topogram instance (pass debug=True params for more info )
+topogram = TopogramAPIClient(TOPOGRAM_URL) #, debug=True)
+
+# create a new user
+try :
+    topogram.create_user(USER, PASSWORD)
+except ValueError:
+    print "> User has already been created."
+
+# login a new user if needed
+resp_user_login = topogram.user_login(USER, PASSWORD)
+print resp_user_login
+
+assert(resp_user_login["status"] == "success")
+assert(resp_user_login["status_code"] == 200)
 
 create_topogram("Test with geo info", my_nodes, my_edges)

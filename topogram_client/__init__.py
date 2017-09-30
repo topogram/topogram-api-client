@@ -53,6 +53,11 @@ class TopogramAPIClient(object):
 
         log.debug( "%s : %s", r.status_code, r.text)
 
+        if r.status_code >= 500 : # handle 403 error
+            err = "%s - Error : %s"%(r.status_code, r.json()["message"])
+            log.error(err)
+            raise ValueError(err)
+
         if r.status_code == 403 : # handle 403 error
             log.error("403 Unauthorized request")
             raise ValueError("403 Unauthorized request")
@@ -109,6 +114,11 @@ class TopogramAPIClient(object):
     def get_topogram(self, _id):
         """GET a single topogram with its _id. Returns a topogram"""
         return self.make_request("GET", "topograms/"+_id, {})
+
+    def get_topogram_by_name(self, name):
+        """GET a single topogram with its name. Returns a topogram"""
+        assert type(name) == str
+        return self.make_request("POST", "topograms/getByName", { "name" : name })
 
     def delete_topogram(self, _id):
         """DELETE a topogram from its _id. Returns an empty topograms"""
