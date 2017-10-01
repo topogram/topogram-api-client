@@ -24,6 +24,10 @@ Read the docs at [http://topogram.readthedocs.io/](http://topogram.readthedocs.i
 
 
 ## Install
+    
+    pip install topogram-api-client
+    
+or using github
 
     git clone https://github.com/topogram/topogram-api-client
     cd topogram-api-client
