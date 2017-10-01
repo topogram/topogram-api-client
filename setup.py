@@ -3,7 +3,7 @@ from setuptools import setup,find_packages
 
 """Setup script for Topogram API Client."""
 
-version = "0.0.1" # [major].[minor].[release]
+version = "1.0.0" # [major].[minor].[release]
 
 # parse README
 with open('README.md') as readme_file:
@@ -15,12 +15,12 @@ with open('requirements.txt') as f:
 
 # run setup
 setup(
-    name='Topogram API Client',
+    name='topogram-api-client',
     version=version,
-    description='Topogram - geo-network mapping.',
+    description='API Client for Topogram - Geo-network mapping.',
     long_description =long_description,
-    author='',
-    author_email='clement@topogram.io',
+    author = "Clement Renaud",
+    author_email = "clement.renaud@gmail.com",
     url = "http://topogram.io",
     download_url='https://github.com/topogram/topogram-python-client',
     keywords = ["network", "edition", "api client", "visualization", "topogram"],
