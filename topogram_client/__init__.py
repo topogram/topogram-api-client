@@ -86,10 +86,10 @@ class TopogramAPIClient(object):
         """DELETE - Delete a user"""
         return self.make_request("DELETE", "users/"+_id, {})
 
-    def create_topogram(self, name):
-        """Create a topogram based on a name or a dict"""
-        assert type(name) == str
-        return self.make_request("POST", "topograms", { "name" : name })
+    def create_topogram(self, title):
+        """Create a topogram based on a title"""
+        assert type(title) == str
+        return self.make_request("POST", "topograms", { "title" : title })
 
     def makePublic(self, _id):
         """Make a topogram public based on its id"""
