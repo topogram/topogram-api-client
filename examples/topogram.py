@@ -3,63 +3,61 @@
 
 from topogram_client import TopogramAPIClient
 from random import randint
+from csv import DictReader
 
 # credentials
 TOPOGRAM_URL = "http://localhost:3000" # "https://app.topogram.io"
 USER = "myself@email.com"
 PASSWORD = "password"
 
-
 # data
-NODES_COUNT = 5
-EDGES_COUNT = 8
+my_nodes = []
 my_edges = []
 
-my_nodes = [{
-    "data" : {
-        "id": str(i),
-        "name" : "Node %s"%i
-    }
-}for i in range(0,NODES_COUNT+1)]
+with open('data/test_data_nodes.csv') as f :
+    reader = DictReader(f)
+    for n in reader :
+        node = {
+            "id" : n["id"],
+            "name" : n["name"],
+            "lat" : float(n["lat"]),
+            "lng" : float(n["lng"]),
+            "weight" : float(n["weight"]),
+            "start" : n["year_start"],
+            "end" : n["year_stop"]
+            }
+        my_nodes.append({ "data" : node })
 
-for n in range(0,EDGES_COUNT):
-    src = str(randint(0,NODES_COUNT))
-    tgt = str(randint(0,NODES_COUNT))
-    edge = {
-        "data" : {
-            "source" : src,
-            "target" : tgt,
-            "weight" : 5,
-            "name" : "Edge from %s to %s"%(src, tgt)
-        }
-    }
-    my_edges.append(edge)
-
-print my_edges
 print my_nodes
 
-# connect to the topogram instance
-topogram = TopogramAPIClient(TOPOGRAM_URL)
+with open('data/test_data_edges.csv') as f :
+    reader = DictReader(f)
+    for e in reader :
+        edge = {
+            "source" : e["source"],
+            "target" : e["target"],
+            "weight" : float(e["weight"])
+        }
+        my_edges.append({ "data" : edge })
 
-# create a new user
-# topogram.create_user(USER, PASSWORD)
-
-# login a new user if needed
-# topogram.user_login(USER, PASSWORD)
+# print my_edges
 
 def create_topogram(title, nodes, edges):
 
     print "Creating topogram '%s'"%title
 
-    r = topogram.create_topogram(title)
-    print r
-    print r["data"]
+    try :
+        r = topogram.create_topogram(title)
+    except ValueError:
+        print '> Topogram already exists'
+        r = topogram.get_topogram_by_name(title)
+
     topogram_ID = r["data"]["_id"]
+    print "topogram ID : %s"%topogram_ID
 
     # get and backup existing nodes and edges
     existing_nodes = topogram.get_nodes(topogram_ID)["data"]
     existing_edges = topogram.get_edges(topogram_ID)["data"]
-
 
     # clear existing graph
     if len(existing_nodes):
@@ -70,11 +68,27 @@ def create_topogram(title, nodes, edges):
         print "%s edges deleted"%len(existing_edges)
 
     r = topogram.create_nodes(topogram_ID, nodes)
+    print r
     print "%s nodes created."%len(r["data"])
     r = topogram.create_edges(topogram_ID, edges)
     print "%s edges created."%len(r["data"])
 
-    print "done. Topogram has been updated. Check it at %s/topograms/%s/view"%(TOPOGRAM_URL, topogram_ID)
+    print "done. Topogram has been updated. Check it at %s/topograms/%s"%(TOPOGRAM_URL, topogram_ID)
 
+# connect to the topogram instance (pass debug=True params for more info )
+topogram = TopogramAPIClient(TOPOGRAM_URL) #, debug=True)
 
-create_topogram("Test", my_nodes, my_edges)
+# create a new user
+try :
+    topogram.create_user(USER, PASSWORD)
+except ValueError:
+    print "> User has already been created."
+
+# login a new user if needed
+resp_user_login = topogram.user_login(USER, PASSWORD)
+print resp_user_login
+
+assert(resp_user_login["status"] == "success")
+assert(resp_user_login["status_code"] == 200)
+
+create_topogram("Geo-time network", my_nodes, my_edges)
