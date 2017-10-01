@@ -16,6 +16,8 @@ topogram = TopogramAPIClient("http://localhost:3000")
 topogram.create_topogram("test")
 ```
 
+See a complete example in [examples](./examples) folder
+
 ## Documentation
 
 Read the docs at [http://topogram.readthedocs.io/](http://topogram.readthedocs.io/)
@@ -27,18 +29,6 @@ Read the docs at [http://topogram.readthedocs.io/](http://topogram.readthedocs.i
     cd topogram-api-client
     python setup.py install
 
-## Example
-
-```python
-from topogram-python-client import TopogramAPIClient
-
-topogram = TopogramAPIClient("http://localhost:3000")
-
-# create a new network
-topogram.create_topogram("My Topogram")
-create_topogram("Test", my_nodes, my_edges)
-```
-See a complete example in [examples](./examples) folder
 
 ## command-line
 
