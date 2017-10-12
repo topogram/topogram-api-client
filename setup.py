@@ -3,7 +3,7 @@ from setuptools import setup,find_packages
 
 """Setup script for Topogram API Client."""
 
-version = "1.0.0" # [major].[minor].[release]
+version = "1.0.1" # [major].[minor].[release]
 
 # parse README
 with open('README.md') as readme_file:
