@@ -4,6 +4,7 @@
 from topogram_client import TopogramAPIClient
 from random import randint
 from csv import DictReader
+from datetime import datetime
 
 # credentials
 TOPOGRAM_URL = "http://localhost:3000" # "https://app.topogram.io"
@@ -23,8 +24,8 @@ with open('data/test_data_nodes.csv') as f :
             "lat" : float(n["lat"]),
             "lng" : float(n["lng"]),
             "weight" : float(n["weight"]),
-            "start" : n["year_start"],
-            "end" : n["year_stop"]
+            "start" : datetime(n["year_start"],1,1,0,0,1).isoformat(),
+            "end" : datetime(n["year_stop"],1,1,0,0,1).isoformat()
             }
         my_nodes.append({ "data" : node })
 
