@@ -129,7 +129,7 @@ class TopogramAPIClient(object):
         assert type(data) is dict
         if id : assert type(id) is str
         if x : assert type(x) is float or type(x) is int
-        if y : assert type(y) is float or type(x) is int
+        if y : assert type(y) is float or type(y) is int
 
         el = {
             "id" : id,
@@ -167,7 +167,7 @@ class TopogramAPIClient(object):
         """POST Create a single edge. Returns the created edge."""
         assert type(data) is dict
         assert type(source) is str
-        assert type(source) is str
+        assert type(target) is str
         if name : assert type(name) is str
         print name
         el = {
